@@ -11,6 +11,19 @@ from . import views  # your own views (e.g., for registration)
 from django.urls import path
 from . import views
 
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    # Other URL patterns...
+    
+    path('add_book/', views.add_book, name='add_book'),
+    path('edit_book/<int:pk>/', views.edit_book, name='edit_book'),
+
+    # If you created delete_book:
+    path('delete_book/<int:pk>/', views.delete_book, name='delete_book'),
+]
+
 urlpatterns = [
     path('admin-role/', views.admin_view, name='admin_view'),
     path('librarian-role/', views.librarian_view, name='librarian_view'),
@@ -39,8 +52,3 @@ urlpatterns = [
     path('libraries/', LibraryListView.as_view(), name='library-list'),
 ]
 
-urlpatterns = [
-    path('books/add/', views.add_book, name='add_book'),
-    path('books/edit/<int:pk>/', views.edit_book, name='edit_book'),
-    path('books/delete/<int:pk>/', views.delete_book, name='delete_book'),
-]
