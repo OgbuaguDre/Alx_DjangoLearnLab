@@ -7,7 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 from django.utils.translation import gettext_lazy as _
 
-@admin.register(CustomUser)
+
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = ('username', 'email', 'date_of_birth', 'is_staff')
@@ -17,6 +17,10 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = UserAdmin.add_fieldsets + (
         (_('Additional Info'), {'fields': ('date_of_birth', 'profile_photo')}),
     )
+
+#Register explicitly
+admin.site.register(CustomUser, CustomUserAdmin)
+
 
 # Custom Admin Display
 @admin.register(Book)
