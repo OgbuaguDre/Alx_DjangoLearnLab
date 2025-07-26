@@ -84,3 +84,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Custom User Model
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# SECURITY SETTINGS (PRODUCTION)
+DEBUG = False  # Turn OFF in production!
+
+ALLOWED_HOSTS = ['yourdomain.com']  # Replace with actual domain
+
+# Browser security
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Secure Cookies over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Optional but recommended
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
