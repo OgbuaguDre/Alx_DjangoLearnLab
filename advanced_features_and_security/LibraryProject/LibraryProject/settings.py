@@ -129,3 +129,5 @@ X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking by denying all iframe embedding
 SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent browser from MIME type sniffing
 SECURE_BROWSER_XSS_FILTER = True  # Enable XSS protection in modern browsers
 
+# Tell Django to trust the X-Forwarded-Proto header set by the proxy (e.g., Nginx, Heroku)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
