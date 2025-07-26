@@ -119,3 +119,13 @@ SECURE_SSL_REDIRECT = True  # Force all connections to use HTTPS
 SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply to subdomains
 SECURE_HSTS_PRELOAD = True  # Allow site to be added to browser preload list
+
+# Ensure cookies are sent only over HTTPS
+SESSION_COOKIE_SECURE = True  # Prevent session cookie over HTTP
+CSRF_COOKIE_SECURE = True     # Prevent CSRF cookie over HTTP
+
+# Additional Security Headers
+X_FRAME_OPTIONS = 'DENY'  # Prevent clickjacking by denying all iframe embedding
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevent browser from MIME type sniffing
+SECURE_BROWSER_XSS_FILTER = True  # Enable XSS protection in modern browsers
+
