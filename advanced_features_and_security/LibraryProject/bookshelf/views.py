@@ -4,6 +4,17 @@ from django.contrib.auth.decorators import permission_required, login_required
 from .models import Book
 from .forms import BookForm  # assumes you created a form for Book
 from .forms import BookSearchForm
+from .forms import ExampleForm
+
+def example_form_view(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Securely handle cleaned data
+            return render(request, 'bookshelf/success.html')
+    else:
+        form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
 
 # Create your views here.
 @permission_required('bookshelf.can_view', raise_exception=True)
