@@ -109,3 +109,13 @@ SECURE_HSTS_PRELOAD = True
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", 'https://trusted.cdn.com')
 CSP_STYLE_SRC = ("'self'", 'https://trusted.cdn.com')
+
+# SECURITY CONFIGURATION
+
+# Redirect all HTTP traffic to HTTPS
+SECURE_SSL_REDIRECT = True  # Force all connections to use HTTPS
+
+# Enable HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply to subdomains
+SECURE_HSTS_PRELOAD = True  # Allow site to be added to browser preload list
