@@ -5,31 +5,33 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django import forms
 
-# Extend the UserCreationForm
-class RegisterForm(UserCreationForm):
+
+class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = ["username", "email", "password1", "password2"]
+        fields = ['username', 'email', 'password1', 'password2']
 
-def register_view(request):
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
+
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect("profile")
+            form.save()
+            messages.success(request, "Your account has been created! Please log in.")
+            return redirect('login')
     else:
-        form = RegisterForm()
-    return render(request, "registration/register.html", {"form": form})
+        form = CustomUserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
+
 
 @login_required
-def profile_view(request):
-    if request.method == "POST":
-        request.user.email = request.POST.get("email")
-        request.user.save()
-        return redirect("profile")
-    return render(request, "profile.html")
-
+def profile(request):
+    return render(request, 'registration/profile.html')
