@@ -1,6 +1,7 @@
 from django import forms
 from .models import Post
 from .models import Comment
+from taggit.managers import TaggableManager
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -20,9 +21,11 @@ class PostForm(forms.ModelForm):
         return post
 
 
-
-
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
+
+class Post(models.Model):
+    ...
+    tags = TaggableManager()
