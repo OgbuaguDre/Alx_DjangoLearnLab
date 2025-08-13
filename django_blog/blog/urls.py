@@ -20,3 +20,10 @@ urlpatterns = [
     path("register/", register_view, name="register"),
     path("profile/", profile_view, name="profile"),
 ]
+
+urlpatterns = [
+    # existing post urls...
+    path('post/<int:post_id>/comments/new/', views.add_comment, name='add-comment'),
+    path('comments/<int:pk>/edit/', views.edit_comment, name='edit-comment'),
+    path('comments/<int:pk>/delete/', views.delete_comment, name='delete-comment'),
+]
