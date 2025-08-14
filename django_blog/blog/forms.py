@@ -7,10 +7,9 @@ from taggit.forms import TagWidget
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content', 'tags']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 8}),
+            'tags': TagWidget(),  # This enables nicer tag entry
         }
 
     def save(self, commit=True, author=None):
