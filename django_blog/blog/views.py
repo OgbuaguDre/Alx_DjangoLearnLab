@@ -17,7 +17,8 @@ from .models import Post, Comment
 from .forms import CommentForm
 from .forms import PostForm
 from django.db.models import Q
-
+from django.views.generic import ListView
+from .models import Post
 
 class CustomUserCreationForm(UserCreationForm):
  
@@ -134,7 +135,14 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+     
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/posts_by_tag.html'
+    context_object_name = 'posts'
 
+    def get_queryset(self):
+        return Post.objects.filter(tags__slug=self.kwargs.get('tag_slug'))
 
 def search_posts(request):
     query = request.GET.get('q')
@@ -161,3 +169,4 @@ def post_list(request):
     else:
         posts = Post.objects.all()
     return render(request, 'blog/post_list.html', {'posts': posts})
+
