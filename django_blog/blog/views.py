@@ -146,3 +146,18 @@ def search_posts(request):
             Q(tags__name__icontains=query)
         ).distinct()
     return render(request, 'blog/search_results.html', {'results': results})
+
+
+def posts_by_tag(request, tag_slug):
+    posts = Post.objects.filter(tags__slug=tag_slug)  # <-- this is the filter
+    return render(request, 'blog/posts_by_tag.html', {'posts': posts, 'tag': tag_slug})
+
+def post_list(request):
+    query = request.GET.get('q')
+    if query:
+        posts = Post.objects.filter(
+            Q(title__icontains=query) | Q(content__icontains=query)
+        )
+    else:
+        posts = Post.objects.all()
+    return render(request, 'blog/post_list.html', {'posts': posts})
