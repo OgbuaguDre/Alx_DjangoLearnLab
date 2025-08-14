@@ -2,6 +2,7 @@ from django import forms
 from .models import Post
 from .models import Comment
 from taggit.managers import TaggableManager
+from taggit.forms import TagWidget
 
 class PostForm(forms.ModelForm):
     class Meta:
