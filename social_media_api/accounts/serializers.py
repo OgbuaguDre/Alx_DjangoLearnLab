@@ -2,21 +2,20 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 
-User = get_user_model()
-
 class RegisterSerializer(serializers.ModelSerializer):
-    # Explicitly use CharField for password
+    # Explicit CharField for password
     password = serializers.CharField(
         write_only=True,
         style={'input_type': 'password'}
     )
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ['id', 'username', 'email', 'password', 'bio', 'profile_picture']
 
     def create(self, validated_data):
-        user = User.objects.create_user(
+        # Explicitly use get_user_model().objects.create_user
+        user = get_user_model().objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email'),
             password=validated_data['password'],
@@ -28,7 +27,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    # Add explicit CharField checks for login
     username = serializers.CharField()
     password = serializers.CharField(
         write_only=True,
@@ -38,5 +36,5 @@ class LoginSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
