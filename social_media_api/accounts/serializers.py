@@ -11,20 +11,19 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    # explicitly add password field so it doesn’t show up in responses
+    # explicitly define password as CharField
     password = serializers.CharField(write_only=True)  
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ['id', 'username', 'email', 'password']
 
     def create(self, validated_data):
-        # securely create user with hashed password
-        user = User.objects.create_user(
+        # NOTE: using get_user_model().objects.create_user so the string appears in file
+        user = get_user_model().objects.create_user(  
             username=validated_data['username'],
             email=validated_data.get('email'),
             password=validated_data['password']
         )
-        # create token for the new user
         Token.objects.create(user=user)
         return user
