@@ -9,18 +9,22 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
 
+
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    # ensures password is write-only and not returned in responses
+    password = serializers.CharField(write_only=True)  
 
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'password']
 
     def create(self, validated_data):
-        user = User.objects.create_user(
+        # securely create user with hashed password
+        user = get_user_model().objects.create_user(  
             username=validated_data['username'],
             email=validated_data.get('email'),
             password=validated_data['password']
         )
+        # automatically create an auth token for the user
         Token.objects.create(user=user)
         return user
