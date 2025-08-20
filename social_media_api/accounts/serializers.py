@@ -5,10 +5,10 @@ from rest_framework.authtoken.models import Token
 User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
-    # Explicitly define CharField for password
+    # Explicitly use CharField for password
     password = serializers.CharField(
         write_only=True,
-        style={'input_type': 'password'}  # makes it render like a password field in browsable API
+        style={'input_type': 'password'}
     )
 
     class Meta:
@@ -19,12 +19,21 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email'),
-            password=validated_data['password'],  # password handled correctly
+            password=validated_data['password'],
             bio=validated_data.get('bio', ''),
             profile_picture=validated_data.get('profile_picture', None),
         )
-        Token.objects.create(user=user)  # generate token for the new user
+        Token.objects.create(user=user)
         return user
+
+
+class LoginSerializer(serializers.Serializer):
+    # Add explicit CharField checks for login
+    username = serializers.CharField()
+    password = serializers.CharField(
+        write_only=True,
+        style={'input_type': 'password'}
+    )
 
 
 class UserSerializer(serializers.ModelSerializer):
