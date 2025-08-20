@@ -4,35 +4,30 @@ from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
-
-class UserSerializer(serializers.ModelSerializer):
-    # make sure fields are explicitly defined when useful
-    username = serializers.CharField(read_only=True)
-    email = serializers.CharField(read_only=True)
-    bio = serializers.CharField(required=False, allow_blank=True)
+class RegisterSerializer(serializers.ModelSerializer):
+    # Explicitly define CharField for password
+    password = serializers.CharField(
+        write_only=True,
+        style={'input_type': 'password'}  # makes it render like a password field in browsable API
+    )
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
-
-
-class RegisterSerializer(serializers.ModelSerializer):
-    # use CharField for password (write_only so it won’t appear in responses)
-    username = serializers.CharField(required=True)
-    email = serializers.CharField(required=False, allow_blank=True)
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = get_user_model()
-        fields = ['id', 'username', 'email', 'password']
+        fields = ['id', 'username', 'email', 'password', 'bio', 'profile_picture']
 
     def create(self, validated_data):
-        # ensure password is hashed using create_user
-        user = get_user_model().objects.create_user(
+        user = User.objects.create_user(
             username=validated_data['username'],
             email=validated_data.get('email'),
-            password=validated_data['password']
+            password=validated_data['password'],  # password handled correctly
+            bio=validated_data.get('bio', ''),
+            profile_picture=validated_data.get('profile_picture', None),
         )
-        # create token for authentication
-        Token.objects.create(user=user)
+        Token.objects.create(user=user)  # generate token for the new user
         return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
