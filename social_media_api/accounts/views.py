@@ -26,11 +26,11 @@ class CustomAuthToken(ObtainAuthToken):
         })
 
 
+
 class FollowUserView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated] 
 
     def post(self, request, user_id):
-        # get the user to follow
         user_to_follow = get_object_or_404(CustomUser.objects.all(), id=user_id)
 
         if user_to_follow == request.user:
@@ -43,10 +43,9 @@ class FollowUserView(generics.GenericAPIView):
 
 
 class UnfollowUserView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated] 
 
     def post(self, request, user_id):
-        # get the user to unfollow
         user_to_unfollow = get_object_or_404(CustomUser.objects.all(), id=user_id)
 
         if user_to_unfollow == request.user:
@@ -56,3 +55,4 @@ class UnfollowUserView(generics.GenericAPIView):
         request.user.following.remove(user_to_unfollow)
         return Response({"detail": f"You have unfollowed {user_to_unfollow.username}."},
                         status=status.HTTP_200_OK)
+
