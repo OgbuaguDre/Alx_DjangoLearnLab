@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, generics
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
+from rest_framework.response import Response
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """Custom permission: only owners can edit or delete their objects."""
@@ -23,18 +24,16 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
 
-class FeedView(generics.ListAPIView):
-    """Posts authored by users the current user follows, newest first."""
-    serializer_class = PostSerializer
+class FeedView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        user = self.request.user
-        following = user.following.all()
-        return Post.objects.filter(author__in=following).order_by('-created_at')
+    def get(self, request):
+        # Get the users that the logged-in user follows
+        following_users = request.user.following.all()
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+        # Fetch posts by followed users and order by latest first
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
 
